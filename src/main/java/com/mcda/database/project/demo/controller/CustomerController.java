@@ -2,8 +2,10 @@ package com.mcda.database.project.demo.controller;
 
 import com.mcda.database.project.demo.dto.ReturnTables;
 import com.mcda.database.project.demo.model.Article;
+import com.mcda.database.project.demo.model.Customer;
 import com.mcda.database.project.demo.repository.AllRepository;
 import com.mcda.database.project.demo.repository.ArticleRepository;
+import com.mcda.database.project.demo.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,9 @@ public class CustomerController {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
     @GetMapping("getTable/{tableName}")
     public ReturnTables findTable(@PathVariable String tableName) {
         ReturnTables returnTables = new ReturnTables();
@@ -35,6 +40,16 @@ public class CustomerController {
         System.out.println(article.getPages());
         System.out.println(article.getAuthors());
         articleRepository.save(article);
+        return true;
+    }
+
+    @Transactional
+    @PostMapping("create/customer")
+    public boolean createCustomer(@RequestBody Customer customer) throws Exception {
+        if (customerRepository.existsByFirstNameAndLastName(customer.getFirstName(), customer.getLastName())) {
+            throw new Exception("Already exists");
+        }
+        customerRepository.save(customer);
         return true;
     }
 
