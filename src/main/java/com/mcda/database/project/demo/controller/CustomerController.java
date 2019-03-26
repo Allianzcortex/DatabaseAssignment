@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
+ @CrossOrigin(origins = "localhost:8080")
 @RequestMapping("api/")
 public class CustomerController {
 
@@ -30,9 +31,11 @@ public class CustomerController {
     @Autowired
     private TransactionItemsRepository transactionItemsRepository;
 
+
     @GetMapping("getTable/{tableName}")
     public ReturnTables findTable(@PathVariable String tableName) {
         ReturnTables returnTables = new ReturnTables();
+        System.out.println("fuck");
         returnTables.setFields(allRepository.findAllTableFields(tableName));
         returnTables.setValues(allRepository.findAllTable(tableName));
         return returnTables;
@@ -108,7 +111,7 @@ public class CustomerController {
         cal.setTime(today);
         cal.add(Calendar.DAY_OF_MONTH, -30);
         Date today30 = cal.getTime();
- 
+
         return transactionRepository.findByTransactionDateAfter(today30);
     }
 
