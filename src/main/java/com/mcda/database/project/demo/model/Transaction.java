@@ -1,5 +1,6 @@
 package com.mcda.database.project.demo.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "Transaction")
+@Table(name = "transactions")
 @NoArgsConstructor
 public class Transaction {
 
