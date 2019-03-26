@@ -8,9 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/")
@@ -71,27 +70,46 @@ public class CustomerController {
         transaction.setCustomerId(transactionInfo.getCustomerId());
         transaction.setTotalPurchasePrice(doublePrice);
         transaction.setTransactionDate(new Date());
-        transactionRepository.save(transaction);
+        Transaction tempTransaction = transactionRepository.saveAndFlush(transaction);
 
         // add items
-
-        TransactionItems transactionItems;
+        List<TransactionItems> transactionItemsList = new ArrayList<>();
         for (Items item : items) {
-            transactionItems = new TransactionItems();
-
+            TransactionItems transactionItems = new TransactionItems();
             transactionItems.setItemId(item.getId());
             transactionItems.setPrice(item.getPrice());
-            System.out.println("price is " + transactionItems.getPrice());
-            System.out.println("transaction number is " + transaction.getTransactionNumber());
-            transactionItems.setTransactionNumber(transaction.getTransactionNumber());
-            transactionItemsRepository.saveAndFlush(transactionItems);
-            
-            System.out.println("save successfully ------------");
+            System.out.println("price is " + tempTransaction.getTotalPurchasePrice());
+            System.out.println("transaction number is " + tempTransaction.getTransactionNumber());
+            transactionItems.setTransactionNumber(tempTransaction.getTransactionNumber());
+            transactionItemsList.add(transactionItems);
         }
+        System.out.println(transactionItemsList.get(0));
+        System.out.println(transactionItemsList.get(1));
+        transactionItemsRepository.saveAll(transactionItemsList);
 
-        // update discount code
+        // TODO update discount code
+
 
         return true;
+    }
+
+    @Transactional
+    @DeleteMapping("cancel/transaction/{transactionNumber}")
+    public List<Transaction> cancelTransaction(@PathVariable int transactionNumber) {
+        // should check whether transactionNumber exists
+        transactionRepository.deleteByTransactionNumber(transactionNumber);
+        transactionItemsRepository.deleteByTransactionNumber(transactionNumber);
+
+        // provided the
+        // transaction occurred no more than 30 days before the current day
+        Date today = new Date();
+        //this line is supposedly to get the date that is 30 days ago
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(today);
+        cal.add(Calendar.DAY_OF_MONTH, -30);
+        Date today30 = cal.getTime();
+ 
+        return transactionRepository.findByTransactionDateAfter(today30);
     }
 
 }
