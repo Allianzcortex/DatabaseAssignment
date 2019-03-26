@@ -44,7 +44,6 @@ public class Article {
     @JoinTable(name = "article_authors",
             joinColumns = {@JoinColumn(name = "article_id")},
             inverseJoinColumns = {@JoinColumn(name = "author_id")})
-    @JsonIgnore
     private Set<Author> authors = new HashSet<Author>();
 
 }

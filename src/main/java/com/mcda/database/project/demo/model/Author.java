@@ -1,24 +1,29 @@
 package com.mcda.database.project.demo.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name="AUTHOR")
+@Table(name = "AUTHOR")
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Author {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @NonNull
     private int id;
 
-    private String lname;
+    @JsonIgnore
 
-    private String fname;
+    private String lname = "";
 
-    private String email;
+    @JsonIgnore
+    private String fname = "";
+
+    @JsonIgnore
+    private String email = "";
 
 }
