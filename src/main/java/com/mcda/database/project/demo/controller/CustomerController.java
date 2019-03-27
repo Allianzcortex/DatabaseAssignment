@@ -99,17 +99,21 @@ public class CustomerController {
     @DeleteMapping("cancel/transaction/{transactionNumber}")
     public List<Transaction> cancelTransaction(@PathVariable int transactionNumber) {
         // should check whether transactionNumber exists
-        transactionRepository.deleteByTransactionNumber(transactionNumber);
-        transactionItemsRepository.deleteByTransactionNumber(transactionNumber);
-
-        // provided the
-        // transaction occurred no more than 30 days before the current day
         Date today = new Date();
         //this line is supposedly to get the date that is 30 days ago
         Calendar cal = new GregorianCalendar();
         cal.setTime(today);
         cal.add(Calendar.DAY_OF_MONTH, -30);
         Date today30 = cal.getTime();
+        System.out.println("30 天前是：");
+        System.out.println(today30.getTime());
+
+        transactionRepository.deleteByTransactionNumber(transactionNumber);
+        transactionItemsRepository.deleteByTransactionNumber(transactionNumber);
+
+        // provided the
+        // transaction occurred no more than 30 days before the current day
+
 
         return transactionRepository.findByTransactionDateAfter(today30);
     }

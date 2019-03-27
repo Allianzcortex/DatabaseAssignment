@@ -1,5 +1,6 @@
 package com.mcda.database.project.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class Transaction {
     private int transactionNumber;
 
     @Column(name = "transaction_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date transactionDate;
 
     @Column(name = "total_purchase_price")

@@ -158,6 +158,26 @@ function myFunction(){
                 console.log(xhr, resp, text);
             }
         })
+        
+    });
+
+    // delete transaction
+    $("#delete_transaction").on('click', function(){
+
+        $.ajax({
+            url: 'http://localhost:8080/api/cancel/transaction/'+parseInt(document.getElementById("transactionId").value), // url where to submit the request
+            type : "DELETE", // type of action POST || GET
+            dataType : 'json', // data type
+           // data : $("#form").serialize(), // post data || get data
+            success : function(result) {
+                // you can see the result from the console
+                // tab of the developer tools
+                console.log(result);
+            },
+            error: function(xhr, resp, text) {
+                console.log(xhr, resp, text);
+            }
+        })
 
         
     });
