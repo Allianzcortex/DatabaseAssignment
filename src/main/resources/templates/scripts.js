@@ -51,6 +51,7 @@ function myFunction(){
           });
    }
 
+
    $(document).ready(function(){
     // click on button submit
     $("#submit").on('click', function(){
@@ -89,4 +90,35 @@ function myFunction(){
             }
         })
     });
+
+    // create new customer
+    $("#submit_new_customer").on('click', function(){
+        var customer = {
+            firstName:document.getElementById("firstName").value,
+            lastName:document.getElementById("lastName").value,
+            telephoneNumber:document.getElementById("telephoneNumber").value,
+            mailingAddress:document.getElementById("mailingAddress").value
+
+        }
+
+        $.ajax({
+            url: 'http://localhost:8080/api/create/customer', // url where to submit the request
+            type : "POST", // type of action POST || GET
+            dataType : 'json', // data type
+            contentType: "application/json",
+           // data : $("#form").serialize(), // post data || get data
+           data:JSON.stringify(customer),
+            success : function(result) {
+                // you can see the result from the console
+                // tab of the developer tools
+                console.log(result);
+            },
+            error: function(xhr, resp, text) {
+                console.log(xhr, resp, text);
+            }
+        })
+
+
+    });
+
 });
