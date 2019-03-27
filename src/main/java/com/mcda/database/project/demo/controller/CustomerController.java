@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 @RestController
- @CrossOrigin(origins = "localhost:8080")
 @RequestMapping("api/")
 public class CustomerController {
 
@@ -31,7 +30,7 @@ public class CustomerController {
     @Autowired
     private TransactionItemsRepository transactionItemsRepository;
 
-
+    @CrossOrigin(origins = "http://localhost:9000")
     @GetMapping("getTable/{tableName}")
     public ReturnTables findTable(@PathVariable String tableName) {
         ReturnTables returnTables = new ReturnTables();

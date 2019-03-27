@@ -1,10 +1,15 @@
 function myFunction(){
+    $("#records_table tr").remove(); 
     var tableName = document.getElementById("tableName").value;
+
     $.ajax({
              type:"GET",
-             url:"http://localhost:8080/api/getTable/transaction_items",
+             url:"http://127.0.0.1:8080/api/getTable/"+tableName,
              //提交的数据
              // data:{Name:"sanmao",Password:"sanmaoword"},
+             headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
              dataType: 'json',
              //在请求之前调用的函数
             // beforeSend:function(){$("#msg").html("logining");},

@@ -2,9 +2,12 @@ function myFunction(){
     var tableName = document.getElementById("tableName").value;
     $.ajax({
              type:"GET",
-             url:"http://localhost:8080/api/getTable/transaction_items",
+             url:"api/getTable/transaction_items",
              //提交的数据
              // data:{Name:"sanmao",Password:"sanmaoword"},
+             headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
              dataType: 'json',
              //在请求之前调用的函数
             // beforeSend:function(){$("#msg").html("logining");},
