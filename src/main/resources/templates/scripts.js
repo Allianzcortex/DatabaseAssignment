@@ -117,8 +117,49 @@ function myFunction(){
                 console.log(xhr, resp, text);
             }
         })
+    });
+    
 
+    // create new transaction
+    $("#submit_new_transaction").on('click', function(){
+        var str = document.getElementById("items").value;
+        // 1:12;2:13
+        var resultArray = [];
+        var tempResult = str.split(";");
+        tempResult.map(function (x) { 
+           var tempResult = {
+               "id":x.split(":")[0],
+               "price":parseInt(x.split(":")[1])
+           }
+           resultArray.push(tempResult);
+         });
+         console.log("----");
+        console.log(resultArray);
 
+        var transaction = {
+            customerId:document.getElementById("customerId").value,
+            items:resultArray
+
+        }
+
+        $.ajax({
+            url: 'http://localhost:8080/api/create/transaction', // url where to submit the request
+            type : "POST", // type of action POST || GET
+            dataType : 'json', // data type
+            contentType: "application/json",
+           // data : $("#form").serialize(), // post data || get data
+           data:JSON.stringify(transaction),
+            success : function(result) {
+                // you can see the result from the console
+                // tab of the developer tools
+                console.log(result);
+            },
+            error: function(xhr, resp, text) {
+                console.log(xhr, resp, text);
+            }
+        })
+
+        
     });
 
 });
