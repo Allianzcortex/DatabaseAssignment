@@ -178,7 +178,7 @@ function myFunction(){
                 console.log(xhr, resp, text);
             }
         })
-
+        
         
     });
 

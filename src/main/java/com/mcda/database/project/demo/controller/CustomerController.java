@@ -34,7 +34,6 @@ public class CustomerController {
     @GetMapping("getTable/{tableName}")
     public ReturnTables findTable(@PathVariable String tableName) {
         ReturnTables returnTables = new ReturnTables();
-        System.out.println("fuck");
         returnTables.setFields(allRepository.findAllTableFields(tableName));
         returnTables.setValues(allRepository.findAllTable(tableName));
         return returnTables;
