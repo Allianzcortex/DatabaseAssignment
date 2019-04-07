@@ -1,25 +1,56 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="utf-8" />
-	<title>Customer Transaction</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-	<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-	<script src="scripts.js"></script>
+    <meta charset="utf-8"/>
+    <title>Customer Transaction</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="scripts.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: 'http://localhost:8080/api/getAllTables', // url where to submit the request
+                type: "GET", // type of action POST || GET
+                dataType: 'json', // data type
+                headers: {
+                    'Access-Control-Allow-Origin': '*'
+                },
+                // data : $("#form").serialize(), // post data || get data
+                success: function (result) {
+                    // you can see the result from the console
+                    // tab of the developer tools
+                     var $select = $('#down');
+                    var listitems = '';
+                    var temp='random';
+$.each(result, function(key,value){
+    console.log(value);
+    listitems += '<option value=' + value + '>' + value + '</option>';
+});
+$select.append(listitems);
+                },
+                error: function (xhr, resp, text) {
+                    console.log(xhr, resp, text);
+                }
+            })
+        });
+
+    </script>
 </head>
 
 <body>
-        
-	<h1>Employees Table</h1>
-    Input Table Name: <input type="text" id="tableName" name="tableName"><br>
-    <button onclick="myFunction()">Search Table</button>
-    <table id="records_table" border='1'>
-           
-        </table>
-    
+
+<h1>Employees Table</h1>
+<select id="down">
+</select>
+<!--Input Table Name: <input type="text" id="tableName" name="tableName"><br>-->
+<button onclick="myFunction()">Search Table</button>
+<table id="records_table" border='1'>
+
+</table>
+
 </body>
 </html>

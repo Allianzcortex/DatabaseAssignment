@@ -1,6 +1,7 @@
 function myFunction(){
     $("#records_table tr").remove(); 
-    var tableName = document.getElementById("tableName").value;
+    // var tableName = document.getElementById("down").value;
+    var tableName = $( "#down" ).val();
 
     $.ajax({
              type:"GET",
@@ -165,7 +166,7 @@ function myFunction(){
     $("#delete_transaction").on('click', function(){
 
         $.ajax({
-            url: 'http://localhost:8080/api/cancel/transaction/'+parseInt(document.getElementById("transactionId").value), // url where to submit the request
+            url: 'http://localhost:8080/api/getAllTables'+parseInt(document.getElementById("transactionId").value), // url where to submit the request
             type : "DELETE", // type of action POST || GET
             dataType : 'json', // data type
            // data : $("#form").serialize(), // post data || get data

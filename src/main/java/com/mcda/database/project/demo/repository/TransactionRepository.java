@@ -11,5 +11,8 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
     void deleteByTransactionNumber(int transactionNumber);
 
-    List<Transaction> findByTransactionDateAfter(Date thirtyDaysAgoDate);
+    List<Transaction> findByCustomerIdAndTransactionDateAfter(Integer customerId, Date thirtyDaysAgoDate);
+
+    List<Transaction> findByTransactionDateAfter(Date dayAfter);
+
 }

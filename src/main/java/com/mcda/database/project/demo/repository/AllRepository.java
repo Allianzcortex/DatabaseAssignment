@@ -37,11 +37,25 @@ public class AllRepository {
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
-    @javax.transaction.Transactional
+    @Transactional
+    public List<String> findAllAvailableTable(){
+        // Just hard-coded the database name
+        String query = "SELECT table_name FROM information_schema.tables WHERE table_schema ='database_project';";
+        return this.jdbcTemplate.query(query, new RowMapper<String>() {
+            public String mapRow(ResultSet rs, int rowNum)
+                    throws SQLException {
+                return rs.getString(1);
+            }
+        });
+    }
+
+    @Transactional
     public List<Map<String, Object>> findAllTable(String tableName) {
         String query = "select * from " + tableName;
         return this.jdbcTemplate.queryForList(query);
     }
+
+
 
     @Transactional
     public List<String> findAllTableFields(String tableName) {
