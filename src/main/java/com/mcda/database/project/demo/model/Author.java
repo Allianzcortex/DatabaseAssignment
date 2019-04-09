@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "AUTHOR")
+@Table(name = "author")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Author {

@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "Article")
+@Table(name = "article")
 @NoArgsConstructor
 public class Article {
 
@@ -40,7 +40,6 @@ public class Article {
 
     @ManyToMany(cascade = {CascadeType.ALL})
     // https://stackoverflow.com/questions/8624633/org-hibernate-mappingexception-unable-to-find-column-with-logical-name
-
     @JoinTable(name = "article_authors",
             joinColumns = {@JoinColumn(name = "article_id")},
             inverseJoinColumns = {@JoinColumn(name = "author_id")})

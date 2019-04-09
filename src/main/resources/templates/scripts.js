@@ -69,6 +69,7 @@ function myFunction(){
             volumeNumber:parseInt(document.getElementById("volumenumber").value),
             title:document.getElementById("title").value,
             pages:parseInt(document.getElementById("pages").value),
+            publicationYear:document.getElementById("publication_year").value,
             authors:authorsList
         }
 
@@ -166,7 +167,7 @@ function myFunction(){
     $("#delete_transaction").on('click', function(){
 
         $.ajax({
-            url: 'http://localhost:8080/api/getAllTables'+parseInt(document.getElementById("transactionId").value), // url where to submit the request
+            url: 'http://localhost:8080/api/cancel/transaction/'+parseInt(document.getElementById("transactionId").value), // url where to submit the request
             type : "DELETE", // type of action POST || GET
             dataType : 'json', // data type
            // data : $("#form").serialize(), // post data || get data
