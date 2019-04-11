@@ -38,11 +38,6 @@ public class Article {
     @Column(name = "publication_year")
     private String publicationYear = null;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    // https://stackoverflow.com/questions/8624633/org-hibernate-mappingexception-unable-to-find-column-with-logical-name
-    @JoinTable(name = "article_authors",
-            joinColumns = {@JoinColumn(name = "article_id")},
-            inverseJoinColumns = {@JoinColumn(name = "author_id")})
-    private Set<Author> authors = new HashSet<Author>();
+
 
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -14,6 +16,7 @@ public class Author {
 
     @Id
     @NonNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @JsonIgnore
@@ -25,5 +28,6 @@ public class Author {
 
     @JsonIgnore
     private String email = "";
+
 
 }

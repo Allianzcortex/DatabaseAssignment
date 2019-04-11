@@ -30,6 +30,9 @@ public class CustomerController {
     @Autowired
     private TransactionItemsRepository transactionItemsRepository;
 
+    @Autowired
+    private ArticleAuthorsRepository articleAuthorsRepository;
+
     @CrossOrigin(origins = "http://localhost:9000")
     @GetMapping("getTable/{tableName}")
     public ReturnTables findTable(@PathVariable String tableName) {
@@ -162,7 +165,6 @@ public class CustomerController {
 
         // provided the
         // transaction occurred no more than 30 days before the current day
-
 
         return transactionRepository.findByTransactionDateAfter(today30);
     }

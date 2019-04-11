@@ -3,9 +3,7 @@ package com.mcda.database.project.demo.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -13,6 +11,7 @@ import javax.persistence.Table;
 @Table(name = "items")
 public class Items {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
 
