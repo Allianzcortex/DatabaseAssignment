@@ -31,7 +31,9 @@ public class CustomerController {
     private TransactionItemsRepository transactionItemsRepository;
 
     @Autowired
-    private ArticleAuthorsRepository articleAuthorsRepository;
+    private AuthorRepository authorRepository;
+//    @Autowired
+//    private ArticleAuthorsRepository articleAuthorsRepository;
 
     @CrossOrigin(origins = "http://localhost:9000")
     @GetMapping("getTable/{tableName}")
@@ -51,8 +53,11 @@ public class CustomerController {
     @PostMapping("create/article")
     public boolean createTable(@RequestBody Article article) {
         System.out.println(article.getPages());
-        System.out.println(article.getAuthors());
+        System.out.println("authors 是：" + article.getAuthors());
         articleRepository.save(article);
+        for(Author author:article.getAuthors()){
+            author.getArticles().add(article);
+        }
         return true;
     }
 

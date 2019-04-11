@@ -58,14 +58,14 @@ function myFunction(){
     $("#submit").on('click', function(){
         var str=document.getElementById("authors").value;
         console.log("---");
-        console.log(str);
+        console.log(document.getElementById("magazine").value);
          var tempResult = str.split(";");
          var authorsList =  tempResult.map(function (x) { 
-            return parseInt(x, 10); 
+            return parseInt(x,10);
           });
 
         var article = {
-            magazine:parseInt(document.getElementById("magazine").value),
+            magazineId:document.getElementById("magazine").value,
             volumeNumber:parseInt(document.getElementById("volumenumber").value),
             title:document.getElementById("title").value,
             pages:parseInt(document.getElementById("pages").value),

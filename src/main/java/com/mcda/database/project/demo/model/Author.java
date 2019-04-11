@@ -20,7 +20,7 @@ public class Author {
     private int id;
 
     @JsonIgnore
-
+    @NonNull
     private String lname = "";
 
     @JsonIgnore
@@ -29,5 +29,7 @@ public class Author {
     @JsonIgnore
     private String email = "";
 
+    @ManyToMany(mappedBy = "authors")
+    private Set<Article> articles = new HashSet<>();
 
 }

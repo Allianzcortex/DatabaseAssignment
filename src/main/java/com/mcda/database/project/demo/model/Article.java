@@ -25,7 +25,7 @@ public class Article {
 
     @NotNull
     @Column(name = "magazineId")
-    private int magazineId;
+    private String magazineId;
 
     @NotNull
     @Column(name = "volume_number")
@@ -38,6 +38,10 @@ public class Article {
     @Column(name = "publication_year")
     private String publicationYear = null;
 
-
+    @ManyToMany
+    @JoinTable(name = "article_authors",
+            joinColumns = {@JoinColumn(name = "article_id")},
+            inverseJoinColumns = {@JoinColumn(name = "author_id")})
+    private Set<Author> authors = new HashSet<Author>();
 
 }
