@@ -88,9 +88,10 @@ $(document).ready(function () {
 
                 if (parseInt(result) === -1) {
                     $("#error_1").text('The same magazine volume should has the same volume number').css('color', 'red');
-                }
-                if (parseInt(result) === -2) {
+                } else if (parseInt(result) === -2) {
                     $("#error_2").text('The same magazine volume should has the same publication year').css('color', 'red');
+                } else {
+                    alert("Add Article Successfully!")
                 }
             },
             error: function (xhr, resp, text) {
@@ -120,6 +121,7 @@ $(document).ready(function () {
                 // you can see the result from the console
                 // tab of the developer tools
                 console.log(result);
+                alert("Add new customer successfully");
             },
             error: function (xhr, resp, text) {
 
@@ -177,6 +179,7 @@ $(document).ready(function () {
                 // you can see the result from the console
                 // tab of the developer tools
                 console.log(result);
+                alert("Add new transaction successfully");
             },
             error: function (xhr, resp, text) {
                 console.log(xhr, resp, text);
@@ -197,6 +200,7 @@ $(document).ready(function () {
                 // you can see the result from the console
                 // tab of the developer tools
                 console.log(result);
+                alert("Delete transaction successfully");
                 var trHTML = '<thead>\n' +
                     '        <tr>\n' +
                     '            <th scope="col">transactionNumber</th>\n' +
