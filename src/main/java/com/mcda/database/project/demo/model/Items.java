@@ -8,12 +8,13 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "items")
+@Table(name = "item")
 public class Items {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "_id")
     private int id;
 
-
+    @Column(name = "price")
     private float price;
 }

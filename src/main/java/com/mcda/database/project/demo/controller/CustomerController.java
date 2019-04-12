@@ -23,6 +23,12 @@ public class CustomerController {
     private ArticleRepository articleRepository;
 
     @Autowired
+    private AuthorRepository authorRepository;
+
+    @Autowired
+    private ItemsRepository itemsRepository;
+
+    @Autowired
     private CustomerRepository customerRepository;
 
     @Autowired
@@ -32,8 +38,6 @@ public class CustomerController {
     private TransactionItemsRepository transactionItemsRepository;
 
     @Autowired
-    private AuthorRepository authorRepository;
-    @Autowired
     private ArticleAuthorsRepository articleAuthorsRepository;
 
     @CrossOrigin(origins = "http://localhost:9000")
@@ -42,6 +46,7 @@ public class CustomerController {
         ReturnTables returnTables = new ReturnTables();
         returnTables.setFields(allRepository.findAllTableFields(tableName));
         returnTables.setValues(allRepository.findAllTable(tableName));
+        System.out.println("return tables are " + returnTables);
         return returnTables;
     }
 
@@ -56,20 +61,28 @@ public class CustomerController {
 
         // check constraints , the best practice is to use controlleradvice to handle exception
         // but this way is faster......
-        if (
-                articleRepository.
-                        findByMagazineIdAndVolume(article.getMagazineId(), article.getVolume()).size() != 0) {
+        if (article.getMagazineId() == null || article.getMagazineId().equals("")) {
+            return -3;
+        }
+
+        if (articleRepository.
+                findByMagazineIdAndVolume(article.getMagazineId(), article.getVolume()).size() != 0) {
+            // case1
             if (articleRepository.
                     findByMagazineIdAndVolume(article.getMagazineId(), article.getVolume()).get(0).getVolumeNumber()
                     != article.getVolumeNumber()) {
                 return -1;
             }
 
+            // case2
             if (!articleRepository.
                     findByMagazineIdAndVolume(article.getMagazineId(), article.getVolume()).get(0).getPublicationYear()
                     .equals(article.getPublicationYear())) {
                 return -2;
             }
+
+            // case3
+
         }
 
 
@@ -109,25 +122,17 @@ public class CustomerController {
 
     @Transactional
     @PostMapping("create/transaction")
-    public boolean createTransaction(@RequestBody TransactionInfo transactionInfo) {
+    public int createTransaction(@RequestBody TransactionInfo transactionInfo) throws Exception {
         System.out.println("customer id is " + transactionInfo.getCustomerId());
         float doublePrice = 0;
         List<Items> items = transactionInfo.getItems();
         for (Items item : items) {
+            System.out.println("Item id is " + item.getId());
+            if (!itemsRepository.findById(item.getId()).isPresent()) {
+                throw new Exception("item id doesn't exist");
+            }
             doublePrice += item.getPrice();
         }
-        /**
-         * Based on the formula : s = Sum*(1-2.5*DC/100)
-         * define the X
-         * the total purchase value of items by customer in the last five years
-
-         *  x>=500: Dc = 5
-         *  400<=x<500: Dc = 4
-         *  300<=x<400: Dc = 3
-         *  200<=x<300: Dc = 2
-         *  100<=x<200: Dc = 1
-         *  x<100: Dc = 0
-         */
 
         // 1. get discount_code
 
@@ -157,13 +162,16 @@ public class CustomerController {
         Customer currentCustomer = customerRepository.findById(transactionInfo.getCustomerId()).get();
         currentCustomer.setDiscountCode(TransactionUtils.getDiscountCode(transactionInfo.getCustomerId(), transactionRepository));
 
-        return true;
+        return 200;
     }
 
     @Transactional
     @DeleteMapping("cancel/transaction/{transactionNumber}")
-    public List<Transaction> cancelTransaction(@PathVariable int transactionNumber) {
+    public List<Transaction> cancelTransaction(@PathVariable int transactionNumber) throws Exception {
         // should check whether transactionNumber exists
+        if (!transactionRepository.findByTransactionNumber(transactionNumber).isPresent()) {
+            throw new Exception("Transaction Number doesn't Exist");
+        }
         Date today = new Date();
         //this line is supposedly to get the date that is 30 days ago
         Calendar cal = new GregorianCalendar();

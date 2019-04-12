@@ -1,9 +1,6 @@
 package com.mcda.database.project.demo.utils;
 
-import com.mcda.database.project.demo.dto.TransactionInfo;
-import com.mcda.database.project.demo.model.Customer;
 import com.mcda.database.project.demo.model.Transaction;
-import com.mcda.database.project.demo.repository.CustomerRepository;
 import com.mcda.database.project.demo.repository.TransactionRepository;
 
 import java.util.Calendar;
@@ -12,6 +9,19 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class TransactionUtils {
+
+    /**
+     * Based on the formula : s = Sum*(1-2.5*DC/100)
+     * define the X
+     * the total purchase value of items by customer in the last five years
+     * <p>
+     * x>=500: Dc = 5
+     * 400<=x<500: Dc = 4
+     * 300<=x<400: Dc = 3
+     * 200<=x<300: Dc = 2
+     * 100<=x<200: Dc = 1
+     * x<100: Dc = 0
+     */
 
     public static int getDiscountCode(int customerId, TransactionRepository transactionRepository) {
         Date today = new Date();
@@ -48,7 +58,6 @@ public class TransactionUtils {
         }
         System.out.println("Currently discount_code is : " + discount_code);
         return discount_code;
-
 
     }
 

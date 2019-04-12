@@ -18,7 +18,7 @@ function myFunction() {
         success: function (data) {
 
             // var obj = jQuery.parseJSON(data);
-            console.log(data.fields);
+            console.log(data.values);
             var ffhtml = '<tr>';
             data.fields.forEach(function (entry) {
                 ffhtml = ffhtml + '<th>' + entry + '</th>';
@@ -31,9 +31,12 @@ function myFunction() {
                 // 如何遍历一个 object 的 values ，参考：
                 // https://javascript.info/keys-values-entries
                 // https://stackoverflow.com/questions/9329446/for-each-over-an-array-in-javascript
-                for (let value of Object.values(item)) {
-                    trHTML += '<td>' + value + '</td>';
+                var s = Object.values(item);
+                alert(s);
+                for(i=0;i<s.length;i++){
+                    trHTML += '<td>' + s[i] + '</td>';
                 }
+
                 trHTML += '/<tr>';
                 // trHTML += '<tr><td>' + item.id + '</td><td>' + item.price  + '</td></tr>';
             });
@@ -90,6 +93,8 @@ $(document).ready(function () {
                     $("#error_1").text('The same magazine volume should has the same volume number').css('color', 'red');
                 } else if (parseInt(result) === -2) {
                     $("#error_2").text('The same magazine volume should has the same publication year').css('color', 'red');
+                } else if (parseInt(result) === -3) {
+                    $("#error_5").text('The name of magazine cannot be empty').css('color', 'red');
                 } else {
                     alert("Add Article Successfully!")
                 }
@@ -157,7 +162,7 @@ $(document).ready(function () {
                 "id": x.split(":")[0],
                 "price": parseInt(x.split(":")[1])
             }
-            resultArray.push(tempResult);
+            resultArray.push(tempResult);re
         });
         console.log("----");
         console.log(resultArray);
@@ -178,10 +183,11 @@ $(document).ready(function () {
             success: function (result) {
                 // you can see the result from the console
                 // tab of the developer tools
-                console.log(result);
                 alert("Add new transaction successfully");
+
             },
             error: function (xhr, resp, text) {
+                $("#error_8").text('The item doesn\'t exist').css('color', 'red');
                 console.log(xhr, resp, text);
             }
         })
@@ -218,7 +224,8 @@ $(document).ready(function () {
                 $('#records_table').append(trHTML);
             },
             error: function (xhr, resp, text) {
-                console.log(xhr, resp, text);
+
+                $("#error_4").text('The Transaction Number doesn\'t exist').css('color', 'red');
             }
         })
 
