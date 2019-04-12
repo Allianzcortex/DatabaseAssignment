@@ -54,7 +54,14 @@ public class AllRepository {
 
     @Transactional
     public List<Map<String, Object>> findAllTable(String tableName) {
-        String query = "select * from " + tableName;
+        String query;
+        if (tableName.equals("transactions")) {
+            // show proper foramt date
+            query = "select transaction_number,DATE_FORMAT(transaction_date, '%Y-%m-%d')," +
+                    "total_purchase_price,customer_id from " + tableName;
+        } else {
+            query = "select * from " + tableName;
+        }
         return this.jdbcTemplate.queryForList(query);
     }
 

@@ -4,6 +4,7 @@ import com.mcda.database.project.demo.dto.ReturnTables;
 import com.mcda.database.project.demo.dto.TransactionInfo;
 import com.mcda.database.project.demo.model.*;
 import com.mcda.database.project.demo.repository.*;
+import com.mcda.database.project.demo.utils.TransactionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,8 @@ public class CustomerController {
 
     @Autowired
     private AuthorRepository authorRepository;
-//    @Autowired
-//    private ArticleAuthorsRepository articleAuthorsRepository;
+    @Autowired
+    private ArticleAuthorsRepository articleAuthorsRepository;
 
     @CrossOrigin(origins = "http://localhost:9000")
     @GetMapping("getTable/{tableName}")
@@ -51,20 +52,55 @@ public class CustomerController {
 
     @Transactional
     @PostMapping("create/article")
-    public boolean createTable(@RequestBody Article article) {
-        System.out.println(article.getPages());
-        System.out.println("authors 是：" + article.getAuthors());
-        articleRepository.save(article);
-        for(Author author:article.getAuthors()){
-            author.getArticles().add(article);
+    public int createTable(@RequestBody Article article) {
+
+        // check constraints , the best practice is to use controlleradvice to handle exception
+        // but this way is faster......
+        if (
+                articleRepository.
+                        findByMagazineIdAndVolume(article.getMagazineId(), article.getVolume()).size() != 0) {
+            if (articleRepository.
+                    findByMagazineIdAndVolume(article.getMagazineId(), article.getVolume()).get(0).getVolumeNumber()
+                    != article.getVolumeNumber()) {
+                return -1;
+            }
+
+            if (!articleRepository.
+                    findByMagazineIdAndVolume(article.getMagazineId(), article.getVolume()).get(0).getPublicationYear()
+                    .equals(article.getPublicationYear())) {
+                return -2;
+            }
         }
-        return true;
+
+
+        // save tag first, save article then
+        System.out.println(article.getPages());
+        System.out.println(article.getAuthor());
+        List<Integer> temp = new ArrayList<>();
+        for (String authorName : article.getAuthor().split(";")) {
+            System.out.println(authorName);
+            String lname = authorName.split(":")[0];
+            String fname = authorName.split(":")[1];
+            String email = authorName.split(":")[2];
+            Author author = new Author(lname, fname, email);
+            Author tempAuthor = authorRepository.saveAndFlush(author);
+            temp.add(tempAuthor.getId());
+        }
+        Article tempArticle = articleRepository.saveAndFlush(article);
+        int articleId = tempArticle.getId();
+        for (int i = 0; i < temp.size(); i++) {
+            ArticleAuthors aa = new ArticleAuthors(articleId, temp.get(i));
+            articleAuthorsRepository.save(aa);
+        }
+
+        return 200;
     }
 
     @Transactional
     @PostMapping("create/customer")
-    public boolean createCustomer(@RequestBody Customer customer) throws Exception {
-        if (customerRepository.existsByFirstNameAndLastName(customer.getFirstName(), customer.getLastName())) {
+    public boolean createCustomer(@RequestBody Customer customer, @RequestParam boolean checkExists) throws Exception {
+        System.out.println("check whether exists " + checkExists);
+        if (checkExists && customerRepository.existsByFirstNameAndLastName(customer.getFirstName(), customer.getLastName())) {
             throw new Exception("Already exists");
         }
         customerRepository.save(customer);
@@ -93,43 +129,12 @@ public class CustomerController {
          *  x<100: Dc = 0
          */
 
-        // 1. get all transaction price
-        Date today = new Date();
-        Calendar cal = new GregorianCalendar();
-        cal.setTime(today);
-        cal.add(Calendar.YEAR, -5);
-        Date yearago5 = cal.getTime();
-        System.out.println(yearago5.getTime());
-        List<Transaction> results = transactionRepository.findByCustomerIdAndTransactionDateAfter(
-                transactionInfo.getCustomerId(), yearago5);
-        // TODO use java8 foreach to simplify the code
-        int price_all = 0;
-        int dicount_code = 0;
-        for (Transaction item : results) {
-            price_all += item.getTotalPurchasePrice();
-        }
+        // 1. get discount_code
 
-        // Java switch doesn't support condition sentence
-        // Certainly you can also extract the following login into utils function
-        if (price_all < 100) {
-            dicount_code = 0;
-        } else if (price_all >= 100 && price_all < 200) {
-            dicount_code = 1;
-        } else if (price_all >= 200 && price_all < 300) {
-            dicount_code = 2;
-        } else if (price_all >= 300 && price_all < 400) {
-            dicount_code = 3;
-        } else if (price_all >= 400 && price_all < 500) {
-            dicount_code = 4;
-        } else if (price_all >= 500) {
-            dicount_code = 5;
-        }
-        System.out.println("Currently discount_code is : " + dicount_code);
-
-
+        int discount_code = TransactionUtils.getDiscountCode(transactionInfo.getCustomerId(), transactionRepository);
         Transaction transaction = new Transaction();
         transaction.setCustomerId(transactionInfo.getCustomerId());
-        transaction.setTotalPurchasePrice((float) (doublePrice * (1 - 2.5 * dicount_code / 100)));
+        transaction.setTotalPurchasePrice((float) (doublePrice * (1 - 2.5 * discount_code / 100)));
         transaction.setTransactionDate(new Date());
         Transaction tempTransaction = transactionRepository.saveAndFlush(transaction);
 
@@ -145,8 +150,12 @@ public class CustomerController {
             transactionItemsList.add(transactionItems);
         }
         System.out.println(transactionItemsList.get(0));
+        System.out.println(transactionItemsList);
         transactionItemsRepository.saveAll(transactionItemsList);
 
+        // update discount code
+        Customer currentCustomer = customerRepository.findById(transactionInfo.getCustomerId()).get();
+        currentCustomer.setDiscountCode(TransactionUtils.getDiscountCode(transactionInfo.getCustomerId(), transactionRepository));
 
         return true;
     }
@@ -163,10 +172,15 @@ public class CustomerController {
         Date today30 = cal.getTime();
         System.out.println("30 days ago is ：");
         System.out.println(today30.getTime());
-
+        // customerId should be found before the transaction is deleted
+        int customerId = transactionRepository.findByTransactionNumber(transactionNumber).get().getCustomerId();
 
         transactionRepository.deleteByTransactionNumber(transactionNumber);
         transactionItemsRepository.deleteByTransactionNumber(transactionNumber);
+
+        // update the discountCode
+
+        customerRepository.findById(customerId).get().setDiscountCode(TransactionUtils.getDiscountCode(customerId, transactionRepository));
 
         // provided the
         // transaction occurred no more than 30 days before the current day

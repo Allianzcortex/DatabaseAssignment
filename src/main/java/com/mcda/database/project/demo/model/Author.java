@@ -10,26 +10,20 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "author")
-@NoArgsConstructor
-@RequiredArgsConstructor
 public class Author {
 
     @Id
-    @NonNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @JsonIgnore
     @NonNull
-    private String lname = "";
+    private String lname;
 
-    @JsonIgnore
-    private String fname = "";
+    @NonNull
+    private String fname;
 
-    @JsonIgnore
-    private String email = "";
+    @NonNull
+    private String email;
 
-    @ManyToMany(mappedBy = "authors")
-    private Set<Article> articles = new HashSet<>();
 
 }

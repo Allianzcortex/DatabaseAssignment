@@ -3,6 +3,7 @@ package com.mcda.database.project.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -27,6 +28,10 @@ public class Article {
     @Column(name = "magazineId")
     private String magazineId;
 
+    @NonNull
+    @Column(name = "volume")
+    private String volume;
+
     @NotNull
     @Column(name = "volume_number")
     private int volumeNumber;
@@ -38,10 +43,7 @@ public class Article {
     @Column(name = "publication_year")
     private String publicationYear = null;
 
-    @ManyToMany
-    @JoinTable(name = "article_authors",
-            joinColumns = {@JoinColumn(name = "article_id")},
-            inverseJoinColumns = {@JoinColumn(name = "author_id")})
-    private Set<Author> authors = new HashSet<Author>();
+    @Column(name = "authors")
+    private String author;
 
 }

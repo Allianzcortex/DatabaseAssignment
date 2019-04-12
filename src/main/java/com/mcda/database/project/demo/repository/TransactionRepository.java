@@ -7,12 +7,16 @@ import org.springframework.data.repository.CrudRepository;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
     void deleteByTransactionNumber(int transactionNumber);
 
     List<Transaction> findByCustomerIdAndTransactionDateAfter(Integer customerId, Date thirtyDaysAgoDate);
 
+    Optional<Transaction> findByTransactionNumber(int transactionNumber);
+
     List<Transaction> findByTransactionDateAfter(Date dayAfter);
+
 
 }
