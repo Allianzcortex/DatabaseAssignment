@@ -197,6 +197,21 @@ $(document).ready(function () {
                 // you can see the result from the console
                 // tab of the developer tools
                 console.log(result);
+                var trHTML = '<thead>\n' +
+                    '        <tr>\n' +
+                    '            <th scope="col">transactionNumber</th>\n' +
+                    '            <th scope="col">transactionDate</th>\n' +
+                    '            <th scope="col">totalPurchasePrice</th>\n' +
+                    '            <th scope="col">customerId</th>\n' +
+                    '        </tr>\n' +
+                    '        </thead>';
+
+                $.each(result, function (i, item) {
+                    trHTML += '<tr><td>' + item.transactionNumber + '</td><td>' + item.transactionDate + '</td><td>' + item.totalPurchasePrice + '</td><td>' +
+                        item.customerId + '</td></tr>';
+                });
+                trHTML += '</tbody>'
+                $('#records_table').append(trHTML);
             },
             error: function (xhr, resp, text) {
                 console.log(xhr, resp, text);
