@@ -32,7 +32,7 @@ function myFunction() {
                 // https://javascript.info/keys-values-entries
                 // https://stackoverflow.com/questions/9329446/for-each-over-an-array-in-javascript
                 var s = Object.values(item);
-                alert(s);
+               
                 for(i=0;i<s.length;i++){
                     trHTML += '<td>' + s[i] + '</td>';
                 }
