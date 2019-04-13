@@ -18,5 +18,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
 
     List<Transaction> findByTransactionDateAfter(Date dayAfter);
 
+    Optional<Transaction> findByTransactionNumberAndTransactionDateAfter(int transactionNumber, Date dayAfter);
 
 }

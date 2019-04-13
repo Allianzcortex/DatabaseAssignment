@@ -73,7 +73,7 @@ public class AllRepository {
                 " where table_schema ='" + databaseName +
                 "'   and table_name = '" + tableName + "'";
 
-        query = "SHOW COLUMNS FROM ARTICLE";
+        query = "SHOW COLUMNS FROM " + tableName;
 
         return this.jdbcTemplate.query(query, new RowMapper<String>() {
             public String mapRow(ResultSet rs, int rowNum)

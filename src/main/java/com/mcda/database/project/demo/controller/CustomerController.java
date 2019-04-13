@@ -68,9 +68,8 @@ public class CustomerController {
         if (articleRepository.
                 findByMagazineIdAndVolume(article.getMagazineId(), article.getVolume()).size() != 0) {
             // case1
-            if (articleRepository.
-                    findByMagazineIdAndVolume(article.getMagazineId(), article.getVolume()).get(0).getVolumeNumber()
-                    != article.getVolumeNumber()) {
+
+            if (articleRepository.findByVolumeNumber(article.getVolumeNumber()).isPresent()) {
                 return -1;
             }
 
@@ -84,8 +83,6 @@ public class CustomerController {
             // case3
 
         }
-
-
         // save tag first, save article then
         System.out.println(article.getPages());
         System.out.println(article.getAuthor());
@@ -129,7 +126,7 @@ public class CustomerController {
         for (Items item : items) {
             System.out.println("Item id is " + item.getId());
             if (!itemsRepository.findById(item.getId()).isPresent()) {
-                throw new Exception("item id doesn't exist");
+                throw new Exception("item id does not exist");
             }
             doublePrice += item.getPrice();
         }
@@ -170,8 +167,9 @@ public class CustomerController {
     public List<Transaction> cancelTransaction(@PathVariable int transactionNumber) throws Exception {
         // should check whether transactionNumber exists
         if (!transactionRepository.findByTransactionNumber(transactionNumber).isPresent()) {
-            throw new Exception("Transaction Number doesn't Exist");
+            throw new Exception("-1");
         }
+
         Date today = new Date();
         //this line is supposedly to get the date that is 30 days ago
         Calendar cal = new GregorianCalendar();
@@ -180,6 +178,10 @@ public class CustomerController {
         Date today30 = cal.getTime();
         System.out.println("30 days ago is ：");
         System.out.println(today30.getTime());
+
+        if (!transactionRepository.findByTransactionNumberAndTransactionDateAfter(transactionNumber, today30).isPresent()) {
+            throw new Exception("-2");
+        }
         // customerId should be found before the transaction is deleted
         int customerId = transactionRepository.findByTransactionNumber(transactionNumber).get().getCustomerId();
 

@@ -32,8 +32,8 @@ function myFunction() {
                 // https://javascript.info/keys-values-entries
                 // https://stackoverflow.com/questions/9329446/for-each-over-an-array-in-javascript
                 var s = Object.values(item);
-               
-                for(i=0;i<s.length;i++){
+
+                for (i = 0; i < s.length; i++) {
                     trHTML += '<td>' + s[i] + '</td>';
                 }
 
@@ -162,7 +162,8 @@ $(document).ready(function () {
                 "id": x.split(":")[0],
                 "price": parseInt(x.split(":")[1])
             }
-            resultArray.push(tempResult);re
+            resultArray.push(tempResult);
+            re
         });
         console.log("----");
         console.log(resultArray);
@@ -187,7 +188,7 @@ $(document).ready(function () {
 
             },
             error: function (xhr, resp, text) {
-                $("#error_8").text('The item doesn\'t exist').css('color', 'red');
+                $("#error_8").text('The item does not exist').css('color', 'red');
                 console.log(xhr, resp, text);
             }
         })
@@ -224,9 +225,19 @@ $(document).ready(function () {
                 $('#records_table').append(trHTML);
             },
             error: function (xhr, resp, text) {
-
-                $("#error_4").text('The Transaction Number doesn\'t exist').css('color', 'red');
+                var s = JSON.stringify(xhr.responseText);
+                var i = s.indexOf("message");
+                var errorMsg = s.substring(i + 12, i + 14);
+                if (errorMsg === "-1") {
+                    $("#error_4").text('The Transaction Number doesn\'t exist').css('color', 'red');
+                } else if (errorMsg === "-2") {
+                    $("#error_4").text('The Transaction  happened before 1 month , it cann\'t be deleted').css('color', 'red');
+                }
             }
+            // error: function (err) {
+            //     alert(JSON.parse(err))
+            //     alert(JSON.stringify(err));
+            // }
         })
 
 
