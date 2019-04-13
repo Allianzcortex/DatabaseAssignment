@@ -11,5 +11,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
     List<Article> findByMagazineIdAndVolume(String magazineId, String volume);
 
+
     Optional<Article> findByVolumeNumber(int volumeNumber);
 }

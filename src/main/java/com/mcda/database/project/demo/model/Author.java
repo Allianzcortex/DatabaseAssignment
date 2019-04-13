@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "author")
+@Table(name = "WEB_AUTHOR")
 public class Author {
 
     @Id
