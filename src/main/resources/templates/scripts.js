@@ -6,15 +6,12 @@ function myFunction() {
     $.ajax({
         type: "GET",
         url: "http://127.0.0.1:8080/api/getTable/" + tableName,
-        //提交的数据
         // data:{Name:"sanmao",Password:"sanmaoword"},
         headers: {
             'Access-Control-Allow-Origin': '*'
         },
         dataType: 'json',
-        //在请求之前调用的函数
-        // beforeSend:function(){$("#msg").html("logining");},
-        //成功返回之后调用的函数
+
         success: function (data) {
 
             // var obj = jQuery.parseJSON(data);
@@ -28,7 +25,6 @@ function myFunction() {
             var trHTML = '';
             $.each(data.values, function (i, item) {
                 trHTML += '<tr>';
-                // 如何遍历一个 object 的 values ，参考：
                 // https://javascript.info/keys-values-entries
                 // https://stackoverflow.com/questions/9329446/for-each-over-an-array-in-javascript
                 var s = Object.values(item);
@@ -42,7 +38,7 @@ function myFunction() {
             });
             $('#records_table').append(trHTML);
         },
-        //调用执行后调用的函数
+
         complete: function (XMLHttpRequest, textStatus) {
             // alert(XMLHttpRequest.responseText);
             // alert(textStatus);
@@ -50,7 +46,7 @@ function myFunction() {
         },
         //调用出错执行的函数
         error: function () {
-            //请求出错处理
+
         }
     });
 }
@@ -163,7 +159,7 @@ $(document).ready(function () {
                 "price": parseInt(x.split(":")[1])
             }
             resultArray.push(tempResult);
-            re
+            
         });
         console.log("----");
         console.log(resultArray);

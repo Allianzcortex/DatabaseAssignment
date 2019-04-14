@@ -14,7 +14,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("api/")
-public class CustomerController {
+public class LibraryController {
 
     @Autowired
     private AllRepository allRepository;

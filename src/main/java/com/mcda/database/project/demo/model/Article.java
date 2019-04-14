@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "article")
+@Table(name = "WEB_ARTICLE")
 @NoArgsConstructor
 public class Article {
 
